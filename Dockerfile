@@ -1,41 +1,62 @@
-FROM php:8.2-fpm
+# ============================================================
+# 1) Build Stage – Install PHP dependencies using Composer
+# ============================================================
+FROM php:8.2-fpm AS build
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    nginx \
+    unzip \
+    git \
+    curl \
+    libzip-dev \
+    libonig-dev \
     sqlite3 \
     libsqlite3-dev \
-    zip unzip git curl
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql pdo_sqlite
+    && docker-php-ext-install zip pdo pdo_mysql pdo_sqlite
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer -o composer-setup.php \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && rm composer-setup.php
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www
+WORKDIR /app
 
 # Copy project files
 COPY . .
 
-# Install Laravel dependencies
+# Install composer dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Prepare Laravel
-RUN cp .env.example .env || true
-RUN php artisan key:generate
-RUN php artisan config:cache
 
-# Copy Nginx config
-COPY nginx.conf /etc/nginx/sites-enabled/default
+# ============================================================
+# 2) Production Stage – PHP-FPM + Nginx running Laravel
+# ============================================================
+FROM php:8.2-fpm
 
-# Entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Install nginx & system libs
+RUN apt-get update && apt-get install -y \
+    nginx \
+    supervisor \
+    sqlite3 \
+    libsqlite3-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_sqlite
 
-EXPOSE 8000
+WORKDIR /app
 
-CMD ["/entrypoint.sh"]
+# Copy built app
+COPY --from=build /app /app
+
+# Copy nginx configuration
+COPY .docker/nginx.conf /etc/nginx/nginx.conf
+
+# Copy supervisord configuration (to run PHP + Nginx together)
+COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# ------------------------------------------------------------
+# Laravel permissions
+# ------------------------------------------------------------
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+
+# Expose PORT 8080 (Koyeb listens here)
+EXPOSE 8080
+
+# Start supervisord (runs PHP-FPM + Nginx in 1 container)
+CMD ["/usr/bin/supervisord"]
