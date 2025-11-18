@@ -1,0 +1,205 @@
+@extends('layouts.app')
+
+@section('title', 'TRIXA - متجر التطبيقات')
+
+@section('content')
+    <header class="topbar">
+      <div class="topbar__left">
+        <button id="btnMenu" aria-label="القائمة" class="icon-btn">
+          <span class="i i-menu"></span>
+        </button>
+      </div>
+      <div class="topbar__center">
+        <img src="{{ asset('assets/logo.svg') }}" alt="TRIXA" class="logo" onerror="this.style.display='none'" />
+        <span class="brand">TRIXA</span>
+      </div>
+      <div class="topbar__right">
+        <a href="https://instagram.com/trixa.store" target="_blank" rel="noopener" aria-label="Instagram" class="icon-btn">
+          <span class="icon icon-ig" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="5" ry="5" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+              <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+        </a>
+        <a id="btnCart" href="{{ route('cart') }}" aria-label="السلة" class="icon-btn"><span class="i i-cart"></span><span class="badge" id="cartCount">0</span></a>
+      </div>
+    </header>
+
+    <main>
+      <!-- شريط عملة وعلم -->
+      <section class="bar">
+        <div class="bar__item">
+          <select id="currency" class="select">
+            <option value="SAR">SAR - ﷼</option>
+            <option value="USD">USD - $</option>
+            <option value="ILS">ILS - ₪</option>
+          </select>
+          <span id="flag" class="flag-emoji" aria-label="علم">🇸🇦</span>
+        </div>
+        <div class="bar__item" style="flex:1">
+          <label for="searchInput" class="visually-hidden">بحث</label>
+          <div class="search">
+            <input id="searchInput" type="search" class="input" placeholder="ابحث عن منتج..." value="" />
+            <span class="i i-search" aria-hidden="true"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- سلايدر العروض -->
+      <section class="slider" aria-label="عروض">
+        <div class="slider__track" id="sliderTrack">
+          <article class="slide" style="--bg:#3f2b82;background:#3f2b82">
+            <div class="slide__content">
+              <h2>خصم %60 على جميع المنتجات</h2>
+              <p>أكثر من 1800 تطبيق بلس ومهكر بلمسة واحدة</p>
+              <a href="#products" class="btn btn-light">تسوق الآن</a>
+            </div>
+            <img src="{{ asset('assets/presets/instagram.jpg') }}" alt="عرض 1" onerror="this.style.display='none'" />
+          </article>
+          <article class="slide" style="--bg:#512da8;background:#512da8">
+            <div class="slide__content">
+              <h2>تفعيل فوري بعد الدفع</h2>
+              <p>استلم الكود مباشرة داخل حسابك</p>
+              <a href="#products" class="btn btn-light">اكتشف المنتجات</a>
+            </div>
+            <img src="{{ asset('assets/presets/telegram.jpg') }}" alt="عرض 2" onerror="this.style.display='none'" />
+          </article>
+        </div>
+        <div class="slider__dots" id="sliderDots"></div>
+      </section>
+
+      <!-- أقسام مختصرة -->
+      <section class="sections">
+        <div class="section-card">تطبيقات بلس</div>
+        <div class="section-card">اشتراكات</div>
+        <div class="section-card">أكواد</div>
+        <div class="section-card">الأكثر مبيعاً</div>
+      </section>
+
+      <!-- المنتجات -->
+      <section id="products" class="products">
+        <header class="section-header">
+          <h3>منتجات مختارة</h3>
+          <a href="#" id="resetSearch" class="link">مسح البحث</a>
+        </header>
+        <div class="grid" id="productsGrid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <!-- Sidebar Drawer -->
+    <aside id="sideDrawer" class="drawer" aria-hidden="true">
+      <div id="sideBackdrop" class="drawer__backdrop" role="button" aria-label="إغلاق القائمة"></div>
+      <div class="drawer__panel drawer__panel--right" role="dialog" aria-modal="true">
+        <div class="drawer__header">
+          <strong>القائمة</strong>
+          <button id="sideClose" class="icon-btn" aria-label="إغلاق"><span class="i i-close"></span></button>
+        </div>
+        <div class="drawer__body">
+          <section style="margin-bottom:16px">
+            <h3 style="margin:0 0 8px;font-size:14px">خدمة العملاء والثقة</h3>
+            <ul class="muted" style="list-style:none;padding:0;margin:0;display:grid;gap:6px;font-size:13px">
+              <li>ساعات العمل: 10ص – 10م</li>
+              <li>لا توجد سياسة إرجاع للمنتجات الرقمية</li>
+              <li>التسليم: فوري بعد الدفع</li>
+            </ul>
+            <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+              <span class="chip">Reflect</span>
+              <span class="chip">iTunes</span>
+            </div>
+          </section>
+
+          <section style="margin-bottom:16px">
+            <h3 style="margin:0 0 8px;font-size:14px">إعدادات المتجر</h3>
+            <div class="field" style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+              <label for="currencySide" style="min-width:90px">العملة</label>
+              <select id="currencySide" class="select" style="flex:1">
+                <option value="SAR">SAR - ﷼</option>
+                <option value="USD">USD - $</option>
+                <option value="ILS">ILS - ₪</option>
+              </select>
+            </div>
+            <div class="actions" style="display:flex;gap:8px">
+              <button id="notifyBtn" class="btn btn-secondary" type="button">اشترك بالعروض</button>
+            </div>
+          </section>
+
+          <section>
+            <h3 style="margin:0 0 8px;font-size:14px">روابط سريعة</h3>
+            <nav class="footer__nav nav-pills" style="margin-bottom:8px">
+              <a href="#" data-info="about">من نحن</a>
+              <a href="#" data-info="privacy">سياسة الخصوصية</a>
+              <a href="#" data-info="support">الدعم</a>
+            </nav>
+            <div style="display:flex;gap:10px">
+              <a href="https://instagram.com/trixa.store" target="_blank" rel="noopener" class="icon-btn" aria-label="Instagram"><span class="icon icon-ig"></span></a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Floating WhatsApp Button -->
+    <button id="fabWhatsApp" class="fab-whatsapp" aria-label="تواصل واتساب">
+      <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M19.11 17.64c-.27-.14-1.6-.78-1.84-.87-.24-.1-.42-.14-.6.14-.18.27-.69.87-.85 1.05-.16.18-.31.2-.58.07-.27-.14-1.12-.41-2.13-1.31-.79-.7-1.32-1.56-1.48-1.83-.16-.27-.02-.42.12-.55.12-.12.27-.31.4-.47.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.6-1.44-.82-1.97-.22-.53-.44-.45-.6-.45h-.51c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.28 0 1.34.98 2.63 1.12 2.81.14.18 1.91 2.9 4.62 4.06.65.28 1.16.45 1.56.57.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.28.23-.63.23-1.16.16-1.28-.07-.11-.25-.18-.52-.32z"/></svg>
+    </button>
+    <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+    <!-- Generic Info Modal -->
+    <div id="infoModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal__backdrop" data-close-info></div>
+      <div class="modal__panel" role="document">
+        <button class="modal__close" aria-label="إغلاق" data-close-info>×</button>
+        <div class="modal__body">
+          <div class="p-hero">
+            <div class="p-info" style="width:100%">
+              <h1 id="infoTitle" class="p-title" style="margin-bottom:6px"></h1>
+              <div id="infoBody" class="p-desc"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div>© <span id="year"></span> TRIXA. جميع الحقوق محفوظة.</div>
+      <nav class="footer__nav">
+        <a href="#">من نحن</a>
+        <a href="#">سياسة الخصوصية</a>
+        <a href="#">الدعم</a>
+      </nav>
+    </footer>
+
+    <!-- Product Quick View Modal -->
+    <div id="productModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal__backdrop" data-close></div>
+      <div class="modal__panel" role="document">
+        <button class="modal__close" aria-label="إغلاق" data-close>×</button>
+        <div class="modal__body">
+          <div class="p-hero p-hero--modal">
+            <div id="mMedia" class="p-media" aria-label="صورة المنتج"></div>
+            <div class="p-info">
+              <h1 id="mTitle" class="p-title"></h1>
+              <div class="p-meta">
+                <span id="mInstant" class="chip" hidden>تفعيل فوري</span>
+              </div>
+              <div class="p-price">
+                <span id="mOld" class="old" hidden></span>
+                <span id="mNew" class="new"></span>
+              </div>
+              <p id="mDesc" class="p-desc"></p>
+              <div class="p-actions">
+                <button id="mAdd" class="btn btn-primary" style="width:100%">أضف إلى السلة</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+@endsection
+
+@push('scripts')
+<script src="{{ asset('js/app.js') }}"></script>
+@endpush
+

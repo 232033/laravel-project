@@ -1,0 +1,63 @@
+@extends('layouts.app')
+
+@section('title', 'سلة المشتريات - TRIXA')
+
+@push('styles')
+<style>
+  .container{padding:16px}
+  .cart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .empty{padding:40px 0;text-align:center;color:#bdb9d8}
+  .summary{background:#15122a;border:1px solid #2a2550;border-radius:14px;padding:12px;position:sticky;top:10px}
+  .summary .row{display:flex;align-items:center;justify-content:space-between;margin:6px 0}
+  .grid-cart{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:900px){.grid-cart{grid-template-columns:1.7fr .9fr}}
+  .btn-secondary{background:#2a2550;color:#cfcaf3;border:1px solid #3a3563;border-radius:10px;padding:10px 14px}
+  .remove{color:#ff8ba3;background:transparent;border:0}
+</style>
+@endpush
+
+@section('content')
+    <header class="topbar">
+      <div class="topbar__left">
+        <a href="{{ route('home') }}" class="icon-btn" aria-label="رجوع"><span class="i i-close" style="transform:rotate(45deg)"></span></a>
+      </div>
+      <div class="topbar__center">
+        <img src="{{ asset('assets/logo.svg') }}" alt="TRIXA" class="logo" onerror="this.style.display='none'" />
+        <span class="brand">TRIXA</span>
+      </div>
+      <div class="topbar__right">
+        <button class="icon-btn" aria-label="السلة"><span class="i i-cart"></span><span class="badge" id="cartCount">0</span></button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="cart-header">
+        <h1 style="margin:0">سلة المشتريات</h1>
+        <a href="{{ route('home') }}" class="btn-secondary">متابعة التسوق</a>
+      </div>
+
+      <div class="grid-cart">
+        <section id="cartList"></section>
+        <aside class="summary">
+          <div class="row"><span>الإجمالي</span><strong id="total">0 ﷼</strong></div>
+          <div class="row"><span>العملة</span>
+            <span id="flagCart" class="flag-emoji" aria-label="علم" style="margin-inline-start:6px">🇸🇦</span>
+            <select id="currency" class="select" style="width:120px">
+              <option value="SAR">SAR - ﷼</option>
+              <option value="USD">USD - $</option>
+              <option value="ILS">ILS - ₪</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="checkout">إتمام الطلب عبر واتساب</button>
+        </aside>
+      </div>
+      <div id="emptyState" class="empty" hidden>
+        السلة فارغة حالياً.
+      </div>
+    </main>
+@endsection
+
+@push('scripts')
+<script src="{{ asset('js/cart.js') }}"></script>
+@endpush
+

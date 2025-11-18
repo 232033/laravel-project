@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>لوحة التحكم - TRIXA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      body{font-family:'Cairo',system-ui,sans-serif}
+      .wrap{max-width:980px;margin:0 auto;padding:16px}
+      .card{background:#15122a;border:1px solid #2a2550;border-radius:16px;padding:16px}
+      .field{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+      .input, .select, textarea{background:#261f47;color:#fff;border:1px solid #3a3563;border-radius:10px;padding:10px}
+      textarea{min-height:90px}
+      .actions{display:flex;gap:8px;flex-wrap:wrap}
+      .btn{cursor:pointer}
+      .btn-danger{background:#ff4d4f;color:#fff;border:0;border-radius:10px;padding:8px 12px}
+      .table{width:100%;border-collapse:separate;border-spacing:0 8px}
+      .table tr{background:#1b1730}
+      .table td,.table th{padding:10px}
+      .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+      .muted{color:#bdb9d8}
+      .hidden{display:none}
+      .badge{background:#2a2550;color:#cfcaf3;border:1px solid #3a3563;border-radius:999px;padding:2px 8px;font-size:12px}
+      .grid2{display:grid;grid-template-columns:1fr;gap:12px}
+      @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <h1 style="margin:0">لوحة التحكم - TRIXA</h1>
+        <div class="actions">
+          <a href="/" class="btn btn-secondary">العودة للموقع</a>
+          <button id="logout" class="btn btn-secondary">تسجيل خروج</button>
+        </div>
+      </div>
+
+      <section id="loginCard" class="card">
+        <h2 style="margin-top:0">تسجيل الدخول</h2>
+        <div class="grid2">
+          <div class="field">
+            <label>اسم المستخدم</label>
+            <input id="user" class="input" placeholder="" />
+          </div>
+          <div class="field">
+            <label>كلمة المرور</label>
+            <input id="pass" class="input" type="password" placeholder="********" />
+          </div>
+        </div>
+        <div class="actions">
+          <button id="loginBtn" class="btn btn-primary">دخول</button>
+          <span id="loginMsg" class="muted"></span>
+        </div>
+
+      </section>
+
+      <section id="dash" class="hidden">
+        <div class="card" style="margin-bottom:12px">
+          <h2 style="margin:0 0 10px">إضافة/تعديل منتج</h2>
+          <div class="grid2">
+            <div class="field"><label>العنوان</label><input id="pTitle" class="input"/></div>
+            <div class="field"><label>السعر</label><input id="pPrice" class="input" type="number" step="0.01"/></div>
+            <div class="field"><label>السعر قبل الخصم</label><input id="pOld" class="input" type="number" step="0.01"/></div>
+            <div class="field">
+              <label>رابط الصورة</label>
+              <input id="pImg" class="input"/>
+              <div class="actions" style="margin-top:6px">
+                <input id="pFile" type="file" accept="image/*" />
+                <span id="pUploadStatus" class="muted"></span>
+              </div>
+              <img id="pPreview" alt="معاينة" style="margin-top:8px;max-width:160px;border-radius:8px;display:none" />
+            </div>
+            <div class="field"><label>رقم واتساب للمنتج (بدون +)</label><input id="pWa" class="input" placeholder="مثال: 9725XXXXXXXX"/></div>
+            <div class="field"><label>وصف
+              <span id="genStatus" class="muted"></span>
+            </label>
+              <textarea id="pDesc" class="input"></textarea>
+            </div>
+            <div class="field"><label>تفعيل فوري؟</label>
+              <select id="pInstant" class="select"><option value="false">لا</option><option value="true">نعم</option></select>
+            </div>
+            <div class="field">
+              <label>صور جاهزة (سوشيال)</label>
+              <div class="actions">
+                <button type="button" id="applyTelegram" class="btn btn-secondary">Telegram</button>
+                <button type="button" id="applyInsta" class="btn btn-secondary">Instagram</button>
+                <button type="button" id="applyTiktok" class="btn btn-secondary">TikTok</button>
+                <button type="button" id="applySnap" class="btn btn-secondary">Snapchat</button>
+                <button type="button" id="applyFb" class="btn btn-secondary">Facebook</button>
+                <button type="button" id="applyTool" class="btn btn-secondary">Tool</button>
+                <span class="muted" id="presetHint">— ارفع الصور من قسم الإعدادات أدناه مرة واحدة</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <button id="saveProduct" class="btn btn-primary">حفظ المنتج</button>
+            <button id="clearForm" class="btn btn-secondary">مسح الحقول</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px">
+          <h2 style="margin:0 0 10px">إدارات السلايدر (الإعلانات الكبيرة)</h2>
+          <div class="grid2">
+            <div class="field"><label>العنوان</label><input id="bTitle" class="input"/></div>
+            <div class="field"><label>نص مختصر</label><input id="bText" class="input"/></div>
+            <div class="field"><label>نص الزر</label><input id="bCtaText" class="input" placeholder="تسوق الآن"/></div>
+            <div class="field"><label>رابط الزر</label><input id="bCtaLink" class="input" placeholder="#products"/></div>
+            <div class="field"><label>لون الخلفية</label><input id="bBg" class="input" placeholder="#3f2b82"/></div>
+            <div class="field">
+              <label>صورة</label>
+              <input id="bFile" type="file" accept="image/*" />
+              <span id="bStatus" class="muted"></span>
+            </div>
+          </div>
+          <div class="actions">
+            <button id="addBanner" class="btn btn-primary">إضافة إلى السلايدر</button>
+            <button id="updateBanner" class="btn btn-secondary">تحديث الإعلان</button>
+            <button id="cancelBannerEdit" class="btn btn-secondary">إلغاء التعديل</button>
+          </div>
+          <div style="margin-top:12px">
+            <div class="actions" style="margin-bottom:8px">
+              <span class="muted">صور جاهزة:</span>
+              <button id="addBannerTelegram" type="button" class="btn btn-secondary">Telegram</button>
+              <button id="addBannerInsta" type="button" class="btn btn-secondary">Instagram</button>
+              <button id="addBannerTiktok" type="button" class="btn btn-secondary">TikTok</button>
+              <button id="addBannerSnap" type="button" class="btn btn-secondary">Snapchat</button>
+              <button id="addBannerFb" type="button" class="btn btn-secondary">Facebook</button>
+              <button id="importDefaultBanners" type="button" class="btn btn-secondary">استيراد الافتراضي</button>
+            </div>
+            <h3 style="margin:0 0 8px;font-size:16px">الإعلانات الحالية</h3>
+            <div class="muted" style="margin-bottom:6px;font-size:12px">اضغط "تعديل" لتحميل الإعلان في الحقول بالأعلى ثم اضغط "تحديث الإعلان".</div>
+            <div id="bannersList" class="grid2"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="top">
+            <h2 style="margin:0">المنتجات</h2>
+            <button id="resetData" class="btn-danger">حذف التعديلات المحلية</button>
+          </div>
+          <table class="table">
+            <thead>
+              <tr><th>العنوان</th><th>السعر</th><th>قبل</th><th>فوري</th><th>عمليات</th></tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Firebase SDKs (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-storage-compat.js"></script>
+    <!-- Config: copy firebase-config.example.js to firebase-config.js and fill your keys -->
+    <script src="firebase-config.js"></script>
+    <script src="firebase.js"></script>
+    <script src="admin-fb.js"></script>
+  </body>
+</html>

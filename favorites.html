@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>المفضلة - TRIXA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__left">
+        <a href="/" class="icon-btn" aria-label="رجوع"><span class="i i-close" style="transform:rotate(45deg)"></span></a>
+      </div>
+      <div class="topbar__center">
+        <img src="assets/logo.svg" alt="TRIXA" class="logo" onerror="this.style.display='none'" />
+        <span class="brand">TRIXA</span>
+      </div>
+      <div class="topbar__right">
+        <a href="favorites.html" aria-label="المفضلة" class="icon-btn active" aria-pressed="true">
+          <span class="icon icon-heart stroke" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </span>
+          <span class="badge favCount" hidden style="margin-inline-start:4px">0</span>
+        </a>
+        <a id="btnCart" href="cart.html" aria-label="السلة" class="icon-btn"><span class="i i-cart"></span><span class="badge" id="cartCount">0</span></a>
+      </div>
+    </header>
+
+    <main>
+      <section class="bar">
+        <div class="bar__item">
+          <select id="currency" class="select">
+            <option value="SAR">SAR - ﷼</option>
+            <option value="USD">USD - $</option>
+            <option value="ILS">ILS - ₪</option>
+          </select>
+          <span id="flag" class="flag-emoji" aria-label="علم">🇸🇦</span>
+        </div>
+        <div class="bar__item"><span class="pill active">المفضلة</span></div>
+      </section>
+
+      <section id="products" class="products">
+        <header class="section-header">
+          <h3>المفضلة</h3>
+        </header>
+        <div class="grid" id="productsGrid" aria-live="polite"></div>
+        <div id="favEmpty" class="empty" style="text-align:center;color:#bdb9d8;padding:24px 0" hidden>
+          لا توجد عناصر في المفضلة حالياً.
+          <div style="margin-top:10px">
+            <a href="index.html" class="btn btn-light">العودة للتسوق</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Optional Firebase (only if firebase-config.js is provided) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="firebase.js"></script>
+    <script src="products.js"></script>
+    <script src="app.js"></script>
+    <script src="favorites.js"></script>
+  </body>
+</html>
